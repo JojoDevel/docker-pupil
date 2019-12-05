@@ -58,13 +58,14 @@ RUN pip3 install pyaudio
 RUN pip3 install pyopengl
 RUN pip3 install pyzmq
 RUN pip3 install scipy
-#RUN pip3 install torch torchvision
 RUN pip3 install git+https://github.com/zeromq/pyre
 RUN pip3 install scikit-build
-RUN pip3 install pupil_apriltags
 RUN pip3 install git+https://github.com/pupil-labs/PyAV
 RUN pip3 install git+https://github.com/pupil-labs/pyuvc
 RUN pip3 install git+https://github.com/pupil-labs/pyndsi
 RUN pip3 install git+https://github.com/pupil-labs/pyglui
 RUN pip3 install git+https://github.com/pupil-labs/nslr
 RUN pip3 install git+https://github.com/pupil-labs/nslr-hmm
+
+#RUN pip3 install pupil_apriltags
+#RUN pip3 install torch torchvision
