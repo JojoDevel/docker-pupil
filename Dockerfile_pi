@@ -86,13 +86,15 @@ RUN pip3 install pyyaml
 RUN apt install -y libopenblas-dev libblas-dev m4 cmake cython python3-dev python3-yaml python3-setuptools
 RUN mkdir pytorch_install && cd pytorch_install && \
 	git clone --recursive https://github.com/pytorch/pytorch --branch=v1.2.0
-#RUN cd pytorch_install/pytorch && \
-#	export NO_CUDA=1 && \
-#	export NO_DISTRIBUTED=1 && \
-#	export NO_MKLDNN=1 && \
-#	export NO_NNPACK=1 && \
-#	export NO_QNNPACK=1 && \
-#	python3 setup.py build
+RUN cd pytorch_install/pytorch && \
+	export NO_CUDA=1 && \
+	export NO_DISTRIBUTED=1 && \
+	export NO_MKLDNN=1 && \
+	export NO_NNPACK=1 && \
+	export NO_QNNPACK=1 && \
+	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> third_party/protobuf/cmake/CMakeList.txt && \
+	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> cmake/Codegen.cmake && \
+	python3 setup.py build
 
 # PyTorch
 #COPY res /home/user/res
