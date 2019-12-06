@@ -1,4 +1,5 @@
 FROM resin/rpi-raspbian:buster
+#FROM balenalib/raspberrypi4-64-debian:latest-build-20191122
 
 # for TZ data
 ENV TZ=Europe/Berlin
@@ -85,26 +86,38 @@ RUN pip3 install pyyaml
 #torch
 RUN apt install -y libopenblas-dev libblas-dev m4 cmake cython python3-dev python3-yaml python3-setuptools
 RUN mkdir pytorch_install && cd pytorch_install && \
-	git clone --recursive https://github.com/pytorch/pytorch --branch=v1.2.0
+	git clone --recursive https://github.com/JojoDevel/pytorch.git
+
+RUN cd pytorch_install/pytorch && git pull
+
+RUN cd pytorch_install/pytorch && echo 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")' >> third_party/protobuf/cmake/CMakeLists.txt
+
 RUN cd pytorch_install/pytorch && \
 	export NO_CUDA=1 && \
 	export NO_DISTRIBUTED=1 && \
 	export NO_MKLDNN=1 && \
 	export NO_NNPACK=1 && \
 	export NO_QNNPACK=1 && \
-	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> third_party/protobuf/cmake/CMakeList.txt && \
-	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> cmake/Codegen.cmake && \
 	python3 setup.py build && \
 	python3 setup.py install
 
-RUN cd ../ && git clone https://github.com/pytorch/vision.git
+RUN git clone https://github.com/pytorch/vision.git
+
+RUN pip3 install six Pillow
+
 RUN cd vision && \
 	export NO_CUDA=1 && \
         export NO_DISTRIBUTED=1 && \
         export NO_MKLDNN=1 && \
         export NO_NNPACK=1 && \
         export NO_QNNPACK=1 && \
-	python3 setup.py install
+	python3 setup.py build
+
+RUN pip3 install numpy
+
+RUN cd vision && python3 setup.py install
+
+RUN git clone https://github.com/pupil-labs/pupil.git
 
 # PyTorch
 #COPY res /home/user/res
