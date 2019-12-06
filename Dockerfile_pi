@@ -94,7 +94,17 @@ RUN cd pytorch_install/pytorch && \
 	export NO_QNNPACK=1 && \
 	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> third_party/protobuf/cmake/CMakeList.txt && \
 	echo "set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")" >> cmake/Codegen.cmake && \
-	python3 setup.py build
+	python3 setup.py build && \
+	python3 setup.py install
+
+RUN cd ../ && git clone https://github.com/pytorch/vision.git
+RUN cd vision && \
+	export NO_CUDA=1 && \
+        export NO_DISTRIBUTED=1 && \
+        export NO_MKLDNN=1 && \
+        export NO_NNPACK=1 && \
+        export NO_QNNPACK=1 && \
+	python3 setup.py install
 
 # PyTorch
 #COPY res /home/user/res
