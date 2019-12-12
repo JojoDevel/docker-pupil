@@ -5,6 +5,8 @@ docker run -it \
   --device=/dev/fb0:/dev/fb0 \
   -v /opt/vc:/opt/vc \
   -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
+  -v $(realpath ../piCam):/piCam \
+  -v $(realpath ./pupil):/home/user/pupil \
   --device=/dev/vchiq:/dev/vchiq \
   --device=/dev/fb0:/dev/fb0 \
   --device=/dev/vcio:/dev/vcio \
