@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM nvidia/opengl:1.0-glvnd-runtime-ubuntu18.04
 
 # for TZ data
 ENV TZ=Europe/Berlin
@@ -43,12 +43,8 @@ RUN apt-get install -y python3-venv
 
 SHELL ["/bin/bash", "-c"]
 
-RUN cd /home/user
-RUN python3 -m venv venv
-#RUN source venv/bin/activate && pip install cysignals
-
 #install python libraries
-RUN pip3 -v install cysignals
+RUN pip3 install cysignals
 RUN pip3 install cython
 RUN pip3 install msgpack==0.5.6
 RUN pip3 install numexpr
@@ -66,6 +62,6 @@ RUN pip3 install git+https://github.com/pupil-labs/pyndsi
 RUN pip3 install git+https://github.com/pupil-labs/pyglui
 RUN pip3 install git+https://github.com/pupil-labs/nslr
 RUN pip3 install git+https://github.com/pupil-labs/nslr-hmm
+RUN pip3 install pupil_apriltags
+RUN pip3 install torch torchvision
 
-#RUN pip3 install pupil_apriltags
-#RUN pip3 install torch torchvision
