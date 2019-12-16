@@ -1,0 +1,66 @@
+#FROM resin/rpi-raspbian:buster
+FROM balenalib/raspberrypi3:buster
+#FROM balenalib/raspberrypi4-64-debian:latest-build-20191122
+
+# for TZ data
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update --fix-missing
+RUN apt-get install -y git
+
+# install opencv from source optimized
+## Install dependencies
+RUN cwd=$(pwd) && \
+    apt-get -y remove x264 libx264-dev && \ 
+    apt-get -y install build-essential checkinstall cmake pkg-config yasm && \ 
+    apt-get -y install git gfortran && \ 
+    apt-get -y install libjpeg8-dev libjasper-dev libpng12-dev && \ 
+    apt-get -y install libtiff5-dev && \ 
+    apt-get -y install libtiff-dev && \ 
+    apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libdc1394-22-dev && \ 
+    apt-get -y install libxine2-dev libv4l-dev && \ 
+    cd /usr/include/linux && \ 
+    ln -s -f ../libv4l1-videodev.h videodev.h && \ 
+    cd $cwd && \ 
+    apt-get -y install libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev  && \ 
+    apt-get -y install libgtk2.0-dev libtbb-dev qt5-default  && \ 
+    apt-get -y install libatlas-base-dev  && \ 
+    apt-get -y install libmp3lame-dev libtheora-dev && \ 
+    apt-get -y install libvorbis-dev libxvidcore-dev libx264-dev  && \ 
+    apt-get -y install libopencore-amrnb-dev libopencore-amrwb-dev  && \ 
+    apt-get -y install libavresample-dev  && \ 
+    apt-get -y install x264 v4l-utils  && \ 
+    apt-get -y install libprotobuf-dev protobuf-compiler && \ 
+    apt-get -y install libgoogle-glog-dev libgflags-dev && \ 
+    apt-get -y install libgphoto2-dev libeigen3-dev libhdf5-dev doxygen
+
+RUN apt-get -y install wget unzip
+
+RUN git clone https://github.com/opencv/opencv.git && cd opencv && git checkout 4.1.2
+#RUN git clone https://github.com/opencv/opencv_contrib.git && cd opencv_contrib && git checkout 3.2.0
+    
+#     && \
+#	wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.1.2.zip && \
+#	unzip opencv_contrib.zip && rm opencv_contrib.zip
+
+RUN apt-get install -y python3-pip
+RUN pip3 install numpy
+
+RUN cd opencv/ && \
+	mkdir build && \
+	cd build && \
+	cmake -D CMAKE_BUILD_TYPE=RELEASE \
+        -D PYTHON3_EXECUTABLE=/usr/bin/python3.7 \
+	    -D CMAKE_INSTALL_PREFIX=/usr/local \
+	    -D BUILD_TESTS=OFF \
+	    -D INSTALL_PYTHON_EXAMPLES=OFF \
+	    -D OPENCV_ENABLE_NONFREE=ON \
+	    -D CMAKE_SHARED_LINKER_FLAGS=-latomic \
+	    -D BUILD_EXAMPLES=OFF .. && \
+	make -j$(nproc) && \
+	make install && \
+	ldconfig
+
+#-D OPENCV_EXTRA_MODULES_PATH=$(realpath ../../opencv_contrib/modules \
+RUN apt-get install libilmbase-dev libopenexr-dev libqtgui4 libqt4-test
