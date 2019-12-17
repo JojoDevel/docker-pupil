@@ -1,5 +1,6 @@
 #FROM resin/rpi-raspbian:buster
-FROM balenalib/raspberrypi3:buster
+#FROM balenalib/raspberrypi3:buster
+FROM opencv
 #FROM balenalib/raspberrypi4-64-debian:latest-build-20191122
 
 # for TZ data
@@ -12,7 +13,7 @@ RUN apt-get install -y git
 # Recommended installation options for ubuntu 18.04
 RUN apt install -y pkg-config git cmake build-essential nasm wget python3-setuptools libusb-1.0-0-dev  python3-dev python3-pip python3-numpy python3-scipy libglew-dev libglfw3-dev libtbb-dev
 RUN apt install -y libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libavresample-dev ffmpeg x264 x265 libportaudio2 portaudio19-dev
-RUN apt install -y python3-opencv libopencv-dev
+#RUN apt install -y python3-opencv libopencv-dev
 RUN apt install -y libgoogle-glog-dev libatlas-base-dev libeigen3-dev
 RUN apt install -y libceres-dev
 
@@ -90,7 +91,7 @@ RUN apt install -y libopenblas-dev libblas-dev m4 cmake cython python3-dev pytho
 RUN mkdir pytorch_install && cd pytorch_install && \
 	git clone --recursive https://github.com/JojoDevel/pytorch.git
 
-RUN cd pytorch_install/pytorch && git pull
+RUN cd pytorch_install/pytorch
 
 RUN cd pytorch_install/pytorch && echo 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -latomic")' >> third_party/protobuf/cmake/CMakeLists.txt
 
@@ -119,7 +120,6 @@ RUN pip3 install numpy
 
 RUN cd vision && python3 setup.py install
 
-RUN git clone https://github.com/pupil-labs/pupil.git
 
 # PyTorch
 #COPY res /home/user/res
@@ -141,8 +141,8 @@ RUN git clone https://github.com/pupil-labs/pupil.git
 #RUN pip3 install torch torchvision
 
 
-#RUN pip3 install git+https://github.com/pupil-labs/nslr
-RUN pip3 install nslr
+RUN git clone https://github.com/JojoDevel/nslr.git && cd nslr && pip3 install .
+#RUN pip3 install nslr
 RUN pip3 install git+https://github.com/pupil-labs/nslr-hmm
 
 #RUN pip3 install pupil_apriltags
@@ -159,3 +159,6 @@ usermod -a -G dialout root && \
 usermod -a -G plugdev root && \
 usermod -a -G tty root
 
+RUN git clone https://github.com/JojoDevel/pupil.git
+
+RUN cd pupil/pupil_src/shared_modules/pupil_detectors && python3 build.py
