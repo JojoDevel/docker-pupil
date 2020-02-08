@@ -15,5 +15,6 @@ docker run -it \
   --env="DISPLAY=$DISPLAY" \
   --privileged \
   --device=/dev/video0:/dev/video0 \
+  --rm \
      pupil \
     bash
