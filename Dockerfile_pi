@@ -110,3 +110,7 @@ usermod -a -G plugdev root && \
 usermod -a -G tty root
 
 #RUN git clone https://github.com/JojoDevel/pupil.git
+RUN apt-get install -y libopencv-dev
+RUN pip3 install pupil-detectors
+
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
