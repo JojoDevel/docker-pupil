@@ -1,5 +1,7 @@
 # docker-pupil
 
+Docker images for running pupil eye tracker on the raspberry pi.
+
 ## Build
 To build the pupil docker image for the raspberry pi run
 ```
